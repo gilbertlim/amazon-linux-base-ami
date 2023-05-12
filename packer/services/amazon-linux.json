@@ -1,0 +1,8 @@
+{
+  "ubuntu_service"   : "amazon-linux",
+  "run_tag_name"       : "amazon-linux",
+  "tag_ami_purpose"    : "amazon-linux",
+  "tag_service"        : "amazon-linux",
+  "tag_role"           : "API",
+  "ami_prefix_name"    : "media-platform-nginx-amazon-linux"
+}

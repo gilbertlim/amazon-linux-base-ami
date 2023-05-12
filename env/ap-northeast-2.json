@@ -1,0 +1,8 @@
+{
+  "region"      : "ap-northeast-2",
+  "vpc_id"      : "vpc-4e08f725",
+  "subnet_id"   : "subnet-02c44f8d2f1e9ba3a",
+  "security_group_id" : "sg-0c9feb7dca5c7a895",
+  "ami_regions": "ap-northeast-2",
+  "ami_users": "123456789"
+}

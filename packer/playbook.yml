@@ -1,0 +1,9 @@
+---
+- name: amazon-linux
+  hosts: "{{ target | default('all') }}"
+
+  roles:
+    - {
+      role: "roles/api.amazon-linux",
+      become: yes
+    }

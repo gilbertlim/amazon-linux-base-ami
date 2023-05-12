@@ -1,0 +1,114 @@
+{
+  "_comment": "Amazon Linux base AMI using Amazon Linux (amzn2-ami-kernel-5.10-hvm-2.0.*.*-x86_64-gp2)",
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": "",
+    "ami"         : "",
+    "ami_regions": "",
+    "ami_users": "",
+    "instance_size" : "t2.micro",
+    "region"      : "",
+    "vpc_id"      : "",
+    "subnet_id"   : "",
+    "security_group_id" : "",
+    "iam_instance_profile" : "",
+
+    "ssh_username"    : "ec2-user",
+    "ssh_port"        : "5299",
+    "user_data_file"  : "",
+
+    "ansible_playbook_path" : "playbook.yml",
+    "ansible_debug_flag": "",
+
+    "ssh_key_inspec" : "",
+
+    "tag_first_owner" : "9ilbert.app@gmail.com",
+    "tag_service"     : "unknown",
+    "tag_role"        : "unknown",
+    "tag_project"     : "media-platform",
+    "tag_source_code" : "unknown",
+    "tag_release_candidate": "no",
+    "tag_ami_purpose" : "unknown",
+    "ami_prefix_name" : "unknown"
+
+  },
+
+  "builders": [{
+    "type"            : "amazon-ebs",
+
+    "communicator"    : "ssh",
+    "ssh_port"        : "{{ user `ssh_port` }}",
+    "vpc_id"             : "{{ user `vpc_id` }}",
+    "subnet_id"          : "{{ user `subnet_id` }}",
+    "associate_public_ip_address": false,
+    "security_group_ids"  : [
+      "{{ user `security_group_id` }}"
+    ],
+    "user_data_file"     : "{{ user `user_data_file` }}",
+    "iam_instance_profile" : "{{ user `iam_instance_profile` }}",
+
+
+    "access_key"      : "{{ user `aws_access_key` }}",
+    "secret_key"      : "{{ user `aws_secret_key` }}",
+    "region"          : "{{ user `region` }}",
+    "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "{{ user `virtualization_type` }}",
+          "name": "{{ user `source_ami_name` }}",
+          "root-device-type": "{{ user `root_device_type` }}"
+          },
+        "owners": ["{{ user `ami_owner` }}"],
+        "most_recent": true
+    },
+    "instance_type"   : "{{ user `instance_size` }}",
+    "ssh_username"    : "{{ user `ssh_username` }}",
+    "ssh_interface": "private_ip",
+
+    "ami_name"        : "{{ user `ami_prefix_name` }}-{{ user `bake_time` }}",
+    "ami_regions": "{{ user `ami_regions`}}",
+    "ami_users": "{{ user `ami_users` }}",
+    "launch_block_device_mappings": [
+      {
+        "device_name": "/dev/sdf",
+        "volume_size": 10,
+        "volume_type": "gp2",
+        "delete_on_termination": true
+      }
+    ],
+    "run_tags"        : {
+      "Name"        : "packer-{{ user `ami_prefix_name` }}",
+      "purpose"     : "Temporary instance for Packer AMI builds",
+      "first_owner" : "{{ user `tag_first_owner` }}",
+      "service"     : "{{ user `tag_service` }}",
+      "role"        : "{{ user `tag_role` }}",
+      "project"     : "{{ user `tag_project` }}",
+      "provisioned" : "packer"
+    },
+    "run_volume_tags" : {
+      "Name"        : "packer-vol-{{ user `ami_prefix_name` }}",
+      "purpose"     : "Temporary volume storage for temporary instance created for Packer AMI builds",
+      "first_owner" : "{{ user `tag_first_owner` }}",
+      "service"     : "{{ user `tag_service` }}",
+      "role"        : "{{ user `tag_role` }}",
+      "project"     : "{{ user `tag_project` }}",
+      "provisioned" : "packer"
+    },
+
+    "tags": {
+      "Name": "{{ user `ami_prefix_name` }}-{{ user `bake_time` }}",
+      "service" : "{{ user `tag_service` }}",
+      "role"    : "{{ user `tag_role` }}",
+      "project" : "{{ user `tag_project` }}",
+      "purpose" : "{{ user `tag_ami_purpose` }}",
+      "source_code" : "{{ user `tag_source_code` }}",
+      "release_candidate" : "{{ user `tag_release_candidate` }}",
+      "ssh_port"    : "{{ user `ssh_port` }}",
+      "source_ami"  : "{{ user `source_ami_name` }}",
+      "provisioned" : "packer",
+      "configured"  : "ansible"
+    }
+  }],
+
+  "provisioners": [
+  ]
+}
